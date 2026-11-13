@@ -1,0 +1,29 @@
+---
+- name: Configure server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update apt cache and install packages
+      ansible.builtin.apt:
+        name:
+          - git
+          - make
+          - nodejs
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      tags:
+        - packages
+
+    - name: Create users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+        shell: /bin/bash
+      loop:
+        - arya
+        - sansa
+        - tirion
+      tags:
+        - users
